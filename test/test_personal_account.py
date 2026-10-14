@@ -1,3 +1,4 @@
+from constants import BASE_URL
 import allure
 
 from pages.header import Header
@@ -7,8 +8,8 @@ from pages.profile_page import ProfilePage
 
 @allure.feature('Личный кабинет')
 class TestPersonalAccount:
-    def _login(self, browser, base_url, test_user):
-        browser.get(f'{base_url}/login')
+    def _login(self, browser, test_user):
+        browser.get(f'{BASE_URL}/login')
 
         LoginPage(browser).login(
             test_user['email'],
@@ -16,27 +17,27 @@ class TestPersonalAccount:
         )
 
     @allure.title('Переход в личный кабинет')
-    def test_open_personal_account(self, browser, base_url, test_user):
-        self._login(browser, base_url, test_user)
-        browser.get(base_url)
+    def test_open_personal_account(self, browser, test_user):
+        self._login(browser, test_user)
+        browser.get(BASE_URL)
 
         Header(browser).open_personal_account()
 
         assert '/account' in browser.current_url
 
     @allure.title('Переход в историю заказов')
-    def test_open_order_history(self, browser, base_url, test_user):
-        self._login(browser, base_url, test_user)
-        browser.get(f'{base_url}/account')
+    def test_open_order_history(self, browser, test_user):
+        self._login(browser, test_user)
+        browser.get(f'{BASE_URL}/account')
 
         ProfilePage(browser).open_order_history()
 
         assert '/account/order-history' in browser.current_url
 
     @allure.title('Выход из личного кабинета')
-    def test_logout(self, browser, base_url, test_user):
-        self._login(browser, base_url, test_user)
-        browser.get(f'{base_url}/account')
+    def test_logout(self, browser, test_user):
+        self._login(browser, test_user)
+        browser.get(f'{BASE_URL}/account')
 
         ProfilePage(browser).logout()
 
