@@ -1,6 +1,6 @@
-from constants import BASE_URL
 import allure
 
+from constants import FORGOT_PASSWORD_URL, LOGIN_URL
 from pages.forgot_password_page import ForgotPasswordPage
 from pages.login_page import LoginPage
 from pages.reset_password_page import ResetPasswordPage
@@ -10,37 +10,23 @@ from pages.reset_password_page import ResetPasswordPage
 class TestPasswordRecovery:
     @allure.title('Переход на страницу восстановления пароля')
     def test_open_forgot_password(self, browser):
-        browser.get(f'{BASE_URL}/login')
+        browser.get(LOGIN_URL)
         LoginPage(browser).open_forgot_password()
-        assert '/forgot-password' in browser.current_url
+        assert FORGOT_PASSWORD_URL in browser.current_url
 
     @allure.title('Ввод email и нажатие «Восстановить»')
     def test_recover_password(self, browser, test_user):
-        browser.get(f'{BASE_URL}/forgot-password')
-
+        browser.get(FORGOT_PASSWORD_URL)
         page = ForgotPasswordPage(browser)
         page.recover(test_user['email'])
-
         assert page.get_email() == test_user['email']
 
     @allure.title('Переключение видимости пароля')
-    def test_password_visibility_toggle(self, browser):
-        browser.get(f'{BASE_URL}/forgot-password')
-
-        recovery_page = ForgotPasswordPage(browser)
-
-        # Вводим email
-        recovery_page.recover('olegpipulin@mail.ru')
-
+    def test_password_visibility_toggle(self, browser, test_user):
+        browser.get(FORGOT_PASSWORD_URL)
+        ForgotPasswordPage(browser).recover(test_user['email'])
         page = ResetPasswordPage(browser)
-
-        # Вводим пароль
         page.enter_password('Test123')
-
-        # До клика поле имеет тип password
-        before = page.password_container_class()
-
+        assert page.password_type() == 'password'
         page.toggle_password()
-        after = page.password_container_class()
-
-        assert 'input_type_password' in before and 'input_type_text' in after
+        assert page.password_type() == 'text'

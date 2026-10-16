@@ -5,7 +5,6 @@ from selenium.webdriver.chrome.options import Options as ChromeOptions
 from selenium.webdriver.firefox.options import Options as FirefoxOptions
 
 from api_client import StellarBurgersApi
-from constants import BASE_URL
 
 
 def pytest_addoption(parser):

@@ -1,5 +1,6 @@
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.action_chains import ActionChains
 
 
 class BasePage:
@@ -43,7 +44,6 @@ class BasePage:
         return self.driver.execute_script(script, *args)
 
     def drag_and_drop(self, source, target):
-        from selenium.webdriver.common.action_chains import ActionChains
         ActionChains(self.driver).click_and_hold(source).move_to_element(target).release().perform()
 
     def url_contains(self, value):
